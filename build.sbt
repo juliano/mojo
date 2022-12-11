@@ -1,17 +1,37 @@
-val scala2Version = "2.13.6"
-val scala3Version = "3.0.1"
+import BuildHelper._
+
+inThisBuild(
+  List(
+    organization := "io.github.juliano",
+    homepage := Some(url("https://github.com/juliano/mojo")),
+    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    developers := List(
+      Developer(
+        "juliano",
+        "Juliano Alves",
+        "von.juliano@gmail.com",
+        url("https://juliano-alves.com/")
+      )
+    )
+  )
+)
 
 lazy val root = project
   .in(file("."))
   .settings(
-    name := "mojo",
-    version := "0.1.0",
+    publish / skip := true
+  )
+  .aggregate(
+    mojo
+  )
 
-    llibraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % "test",
-
-    // To make the default compiler and REPL use Dotty
-    scalaVersion := scala3Version,
-
-    // To cross compile with Scala 3 and Scala 2
-    crossScalaVersions := Seq(scala3Version, scala2Version)
+lazy val mojo = project
+  .in(file("mojo"))
+  .settings(stdSettings("mojo"))
+  .settings(buildInfoSettings("mojo"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "3.2.9",
+      "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0"
+    )
   )
